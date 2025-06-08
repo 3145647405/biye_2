@@ -1,0 +1,8 @@
+{
+  "training_completed": true,
+  "total_episodes": 315,
+  "total_stages_completed": 9,
+  "total_training_steps": 161280,
+  "result_directory": "results/complete_training_20250607_160853",
+  "final_visualization": "results/complete_training_20250607_160853/plots/training_visualization.png"
+}

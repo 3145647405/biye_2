@@ -1,0 +1,277 @@
+# 多AGV调度MAPPO-Attention配置文件
+
+# 环境配置
+environment:
+  map_width: 26
+  map_height: 10
+  num_agvs: 4
+  num_tasks: 16
+  max_load: 25
+  max_steps: 500
+  
+  # 货架配置
+  shelf_width: 4
+  shelf_height: 2
+  shelf_spacing: 1
+  
+  # 任务配置
+  task_weights: [5, 10]  # 可能的任务重量
+  urgency_levels: [1, 3, 5, 7, 9]  # 紧急程度等级
+  urgent_threshold: 5  # 紧急任务阈值
+  
+  # AGV配置
+  agv_speed: 1.0
+  pickup_time: 1  # 拾取任务所需时间
+  
+  # 观测配置
+  max_nearby_tasks: 10  # 每个AGV观测的最大任务数
+  max_nearby_agvs: 5   # 每个AGV观测的最大其他AGV数
+  observation_range: 8.0  # 观测范围
+
+# 奖励配置 - 重新平衡奖励机制
+rewards:
+  # 基础移动奖励（大幅降低惩罚）
+  step_penalty: -0.01           # 从-0.1降至-0.01，减少90%
+  efficient_move: 0.02          # 朝目标移动的小额奖励
+
+  # 任务相关奖励（提高权重）
+  task_pickup: 15.0             # 从10.0提高到15.0
+  mission_complete: 100.0       # 从50.0提高到100.0
+  urgency_bonus: 8.0            # 从5.0提高到8.0
+
+  # 协调行为奖励（新增）
+  collision_avoidance: 1.0      # 成功避让奖励
+  path_efficiency: 2.0          # 路径效率奖励
+  cooperation_bonus: 3.0        # 协作行为奖励
+
+  # 惩罚机制（调整权重）
+  collision: -25.0              # 从-20.0提高到-25.0
+  deadlock: -15.0               # 从-10.0提高到-15.0
+  inefficient_action: -0.5      # 无效动作惩罚
+  resource_waste: -2.0          # 资源浪费惩罚
+
+  # 保留原有配置
+  load_efficiency_bonus: 2.0
+
+# 网络架构配置
+model:
+  # 注意力机制配置
+  d_model: 64
+  num_attention_heads: 4
+  attention_dropout: 0.1
+  
+  # Actor网络配置
+  actor_hidden_dims: [128, 64]
+  actor_activation: "relu"
+  
+  # Critic网络配置
+  critic_hidden_dims: [128, 64]
+  critic_activation: "relu"
+  
+  # 多层次注意力配置
+  enable_task_attention: true
+  enable_agent_attention: true
+  enable_global_attention: true
+  enable_temporal_attention: false  # 暂时禁用时序注意力
+  
+  # 自适应注意力配置
+  enable_adaptive_attention: false  # 暂时禁用自适应调节
+  max_attention_heads: 8
+  max_attention_range: 15
+
+# MAPPO训练配置
+training:
+  # 基础训练参数
+  total_timesteps: 100000  # 最大训练步数
+  batch_size: 256          # 批次大小
+  mini_batch_size: 64      # 小批次大小
+  num_epochs: 2            # 训练轮数
+  learning_rate: 0.0003
+  
+  # PPO参数
+  clip_epsilon: 0.2
+  value_loss_coef: 0.5
+  entropy_coef: 0.01
+  max_grad_norm: 0.5
+  
+  # GAE参数
+  gamma: 0.99
+  gae_lambda: 0.95
+  
+  # 经验回放
+  buffer_size: 512        # 减少缓冲区大小
+
+  # 评估配置
+  eval_episodes: 3        # 减少评估回合数
+  eval_frequency: 2000    # 减少评估频率
+
+  # 保存配置
+  save_frequency: 5000    # 更频繁的保存
+  checkpoint_dir: "checkpoints"
+  log_dir: "logs"
+  results_dir: "results"  # 结果根目录
+
+  # 文件组织配置
+  use_timestamp_folders: true  # 使用时间戳文件夹
+  save_config_copy: true       # 保存配置文件副本
+  save_training_summary: true  # 保存训练总结
+
+# 课程学习配置 - 按用户建议的合理渐进式训练
+curriculum:
+  enable: true
+  stages:
+    # 阶段1：1个AGV，2个任务 - 最基础场景 (总计10000个episode的分配)
+    - name: "stage_1_basic"
+      num_agvs: 1
+      num_tasks: 2
+      max_steps: 150
+      map_width: 16
+      map_height: 8
+      until:
+        min_episodes: 800
+        min_return: -10.0
+        min_completion_rate: 0.3
+
+    # 阶段2：2个AGV，4个任务 - 协作入门
+    - name: "stage_2_cooperation"
+      num_agvs: 2
+      num_tasks: 4
+      max_steps: 200
+      map_width: 20
+      map_height: 8
+      until:
+        min_episodes: 1000
+        min_return: 0.0
+        min_completion_rate: 0.4
+
+    # 阶段3：2个AGV，6个任务 - 增加任务密度
+    - name: "stage_3_density"
+      num_agvs: 2
+      num_tasks: 6
+      max_steps: 250
+      map_width: 20
+      map_height: 10
+      until:
+        min_episodes: 1200
+        min_return: 5.0
+        min_completion_rate: 0.45
+
+    # 阶段4：3个AGV，6个任务 - 多智能体协调
+    - name: "stage_4_coordination"
+      num_agvs: 3
+      num_tasks: 6
+      max_steps: 300
+      map_width: 24
+      map_height: 10
+      until:
+        min_episodes: 1200
+        min_return: 10.0
+        min_completion_rate: 0.5
+
+    # 阶段5：3个AGV，8个任务 - 平衡复杂度
+    - name: "stage_5_balanced"
+      num_agvs: 3
+      num_tasks: 8
+      max_steps: 350
+      map_width: 24
+      map_height: 10
+      until:
+        min_episodes: 1300
+        min_return: 15.0
+        min_completion_rate: 0.55
+
+    # 阶段6：4个AGV，8个任务 - 标准场景
+    - name: "stage_6_standard"
+      num_agvs: 4
+      num_tasks: 8
+      max_steps: 400
+      map_width: 26
+      map_height: 10
+      until:
+        min_episodes: 1400
+        min_return: 20.0
+        min_completion_rate: 0.6
+
+    # 阶段7：4个AGV，10个任务 - 中等难度
+    - name: "stage_7_intermediate"
+      num_agvs: 4
+      num_tasks: 10
+      max_steps: 450
+      map_width: 26
+      map_height: 12
+      until:
+        min_episodes: 1500
+        min_return: 25.0
+        min_completion_rate: 0.65
+
+    # 阶段8：4个AGV，12个任务 - 高任务密度
+    - name: "stage_8_dense"
+      num_agvs: 4
+      num_tasks: 12
+      max_steps: 500
+      map_width: 28
+      map_height: 12
+      until:
+        min_episodes: 1600
+        min_return: 30.0
+        min_completion_rate: 0.7
+
+    # 阶段9：4个AGV，16个任务 - 最终挑战
+    - name: "stage_9_final"
+      num_agvs: 4
+      num_tasks: 16
+      max_steps: 600
+      map_width: 30
+      map_height: 14
+      until:
+        min_episodes: 2000
+        min_return: 35.0
+        min_completion_rate: 0.75
+
+# 可视化配置
+visualization:
+  enable_render: true
+  render_mode: "human"  # "human" 或 "rgb_array"
+  fps: 10
+  save_video: false
+  video_dir: "videos"
+
+  # 动态图表配置 - 按用户要求每100个episode更新一次
+  enable_realtime_plots: true
+  plot_update_frequency: 100  # 每100个episode更新一次图表
+  single_plot_file: true  # 只生成一张PNG图片
+  plot_training_curves: true
+  plot_attention_weights: true
+  plot_agv_trajectories: true
+  save_plots: true
+  plot_format: "png"
+  plot_dpi: 300
+
+  # 指标可视化配置
+  metrics_to_plot:
+    - "episode_reward"
+    - "actor_loss"
+    - "critic_loss"
+    - "entropy"
+    - "completion_rate"
+    - "load_utilization"
+    - "path_length"
+    - "collision_count"
+
+# 日志配置
+logging:
+  level: "INFO"
+  log_file: "training.log"
+  tensorboard_log: true
+  console_log: true
+  
+  # 记录频率
+  log_frequency: 100
+  metric_log_frequency: 1000
+
+# 调试配置
+debug:
+  enable: false
+  verbose: false
+  save_trajectories: false
+  attention_analysis: false

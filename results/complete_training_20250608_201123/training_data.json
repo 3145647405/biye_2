@@ -1,0 +1,391 @@
+{
+  "episode_data": {
+    "episodes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ],
+    "rewards": [
+      -14.629629629629596,
+      -14.999999999999963,
+      -14.999999999999963,
+      -14.999999999999963,
+      -14.999999999999963,
+      -8.333333333333314,
+      -8.333333333333307,
+      -10.55555555555553,
+      -4.629629629629609,
+      6.12962962962965
+    ],
+    "actor_losses": [
+      -0.0009858813136816025,
+      -0.000814427062869072,
+      -0.0007034132350236178,
+      -0.0008177647264674306,
+      -0.00017879569912329337,
+      -0.00021096149281598647,
+      0.0003808850792413575,
+      0.0006875500229625959,
+      0.0005120221238326185,
+      0.0017031921187929348
+    ],
+    "critic_losses": [
+      6.46606832742691,
+      6.951126539707183,
+      6.808673120141028,
+      6.5461344390511504,
+      6.656009394174814,
+      6.539154206138253,
+      6.4973578015757205,
+      6.130579132717187,
+      5.79904321779132,
+      5.481967243099095
+    ],
+    "entropies": [
+      2.3967325687408447,
+      2.396541804075241,
+      2.396272748708725,
+      2.395690441131592,
+      2.394477039575577,
+      2.392821341753006,
+      2.386555105447769,
+      2.3743054568767548,
+      2.3431396782398224,
+      2.2686228454113007
+    ],
+    "completion_rates": [
+      0.16666666666666666,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.5,
+      0.5,
+      0.3333333333333333,
+      0.5,
+      0.6666666666666666
+    ],
+    "load_utilizations": [
+      0.38652304740189947,
+      0.7016303152466816,
+      0.6368182020056264,
+      0.4979335935877935,
+      0.6358854232438227,
+      0.5047868919741331,
+      0.45562887552192544,
+      0.36962249384895585,
+      0.4473812293331373,
+      0.4030809947137253
+    ],
+    "path_lengths": [
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      150.0,
+      101.66666666666667
+    ],
+    "collision_counts": [
+      1,
+      4,
+      0,
+      1,
+      0,
+      5,
+      1,
+      1,
+      0,
+      1
+    ],
+    "episode_lengths": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "timestamps": [
+      1749384685.750158,
+      1749384686.5434546,
+      1749384687.3276277,
+      1749384688.1125646,
+      1749384688.893843,
+      1749384689.666017,
+      1749384690.4426918,
+      1749384691.2172852,
+      1749384691.9911907,
+      1749384692.6860838
+    ]
+  },
+  "step_data": {
+    "steps": [],
+    "actor_losses": [],
+    "critic_losses": [],
+    "entropies": [],
+    "learning_rates": [],
+    "timestamps": []
+  },
+  "config": {
+    "environment": {
+      "map_width": 16,
+      "map_height": 8,
+      "num_agvs": 1,
+      "num_tasks": 2,
+      "max_load": 25,
+      "max_steps": 150,
+      "shelf_width": 4,
+      "shelf_height": 2,
+      "shelf_spacing": 1,
+      "task_weights": [
+        5,
+        10
+      ],
+      "urgency_levels": [
+        1,
+        3,
+        5,
+        7,
+        9
+      ],
+      "urgent_threshold": 5,
+      "agv_speed": 1.0,
+      "pickup_time": 1,
+      "max_nearby_tasks": 10,
+      "max_nearby_agvs": 5,
+      "observation_range": 8.0
+    },
+    "rewards": {
+      "task_pickup": 10.0,
+      "mission_complete": 50.0,
+      "collision": -20.0,
+      "deadlock": -10.0,
+      "step_penalty": -0.1,
+      "urgency_bonus": 5.0,
+      "load_efficiency_bonus": 2.0
+    },
+    "model": {
+      "d_model": 64,
+      "num_attention_heads": 4,
+      "attention_dropout": 0.1,
+      "actor_hidden_dims": [
+        128,
+        64
+      ],
+      "actor_activation": "relu",
+      "critic_hidden_dims": [
+        128,
+        64
+      ],
+      "critic_activation": "relu",
+      "enable_task_attention": true,
+      "enable_agent_attention": true,
+      "enable_global_attention": true,
+      "enable_temporal_attention": false,
+      "enable_adaptive_attention": false,
+      "max_attention_heads": 8,
+      "max_attention_range": 15
+    },
+    "training": {
+      "total_timesteps": 100000,
+      "batch_size": 256,
+      "mini_batch_size": 64,
+      "num_epochs": 2,
+      "learning_rate": 0.0003,
+      "clip_epsilon": 0.2,
+      "value_loss_coef": 0.5,
+      "entropy_coef": 0.01,
+      "max_grad_norm": 0.5,
+      "gamma": 0.99,
+      "gae_lambda": 0.95,
+      "buffer_size": 512,
+      "eval_episodes": 3,
+      "eval_frequency": 2000,
+      "save_frequency": 5000,
+      "checkpoint_dir": "checkpoints",
+      "log_dir": "logs",
+      "results_dir": "results",
+      "use_timestamp_folders": true,
+      "save_config_copy": true,
+      "save_training_summary": true
+    },
+    "curriculum": {
+      "enable": true,
+      "stages": [
+        {
+          "name": "stage_1_basic",
+          "num_agvs": 1,
+          "num_tasks": 2,
+          "max_steps": 150,
+          "map_width": 16,
+          "map_height": 8,
+          "until": {
+            "min_episodes": 800,
+            "min_return": -10.0,
+            "min_completion_rate": 0.3
+          }
+        },
+        {
+          "name": "stage_2_cooperation",
+          "num_agvs": 2,
+          "num_tasks": 4,
+          "max_steps": 200,
+          "map_width": 20,
+          "map_height": 8,
+          "until": {
+            "min_episodes": 1000,
+            "min_return": 0.0,
+            "min_completion_rate": 0.4
+          }
+        },
+        {
+          "name": "stage_3_density",
+          "num_agvs": 2,
+          "num_tasks": 6,
+          "max_steps": 250,
+          "map_width": 20,
+          "map_height": 10,
+          "until": {
+            "min_episodes": 1200,
+            "min_return": 5.0,
+            "min_completion_rate": 0.45
+          }
+        },
+        {
+          "name": "stage_4_coordination",
+          "num_agvs": 3,
+          "num_tasks": 6,
+          "max_steps": 300,
+          "map_width": 24,
+          "map_height": 10,
+          "until": {
+            "min_episodes": 1200,
+            "min_return": 10.0,
+            "min_completion_rate": 0.5
+          }
+        },
+        {
+          "name": "stage_5_balanced",
+          "num_agvs": 3,
+          "num_tasks": 8,
+          "max_steps": 350,
+          "map_width": 24,
+          "map_height": 10,
+          "until": {
+            "min_episodes": 1300,
+            "min_return": 15.0,
+            "min_completion_rate": 0.55
+          }
+        },
+        {
+          "name": "stage_6_standard",
+          "num_agvs": 4,
+          "num_tasks": 8,
+          "max_steps": 400,
+          "map_width": 26,
+          "map_height": 10,
+          "until": {
+            "min_episodes": 1400,
+            "min_return": 20.0,
+            "min_completion_rate": 0.6
+          }
+        },
+        {
+          "name": "stage_7_intermediate",
+          "num_agvs": 4,
+          "num_tasks": 10,
+          "max_steps": 450,
+          "map_width": 26,
+          "map_height": 12,
+          "until": {
+            "min_episodes": 1500,
+            "min_return": 25.0,
+            "min_completion_rate": 0.65
+          }
+        },
+        {
+          "name": "stage_8_dense",
+          "num_agvs": 4,
+          "num_tasks": 12,
+          "max_steps": 500,
+          "map_width": 28,
+          "map_height": 12,
+          "until": {
+            "min_episodes": 1600,
+            "min_return": 30.0,
+            "min_completion_rate": 0.7
+          }
+        },
+        {
+          "name": "stage_9_final",
+          "num_agvs": 4,
+          "num_tasks": 16,
+          "max_steps": 600,
+          "map_width": 30,
+          "map_height": 14,
+          "until": {
+            "min_episodes": 2000,
+            "min_return": 35.0,
+            "min_completion_rate": 0.75
+          }
+        }
+      ]
+    },
+    "visualization": {
+      "enable_render": true,
+      "render_mode": "human",
+      "fps": 10,
+      "save_video": false,
+      "video_dir": "videos",
+      "enable_realtime_plots": true,
+      "plot_update_frequency": 100,
+      "single_plot_file": true,
+      "plot_training_curves": true,
+      "plot_attention_weights": true,
+      "plot_agv_trajectories": true,
+      "save_plots": true,
+      "plot_format": "png",
+      "plot_dpi": 300,
+      "metrics_to_plot": [
+        "episode_reward",
+        "actor_loss",
+        "critic_loss",
+        "entropy",
+        "completion_rate",
+        "load_utilization",
+        "path_length",
+        "collision_count"
+      ]
+    },
+    "logging": {
+      "level": "INFO",
+      "log_file": "training.log",
+      "tensorboard_log": true,
+      "console_log": true,
+      "log_frequency": 100,
+      "metric_log_frequency": 1000
+    },
+    "debug": {
+      "enable": false,
+      "verbose": false,
+      "save_trajectories": false,
+      "attention_analysis": false
+    }
+  },
+  "save_time": 1749384693.0179584
+}

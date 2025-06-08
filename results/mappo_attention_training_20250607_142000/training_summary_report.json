@@ -1,0 +1,30 @@
+{
+  "training_summary": {
+    "total_episodes": 196,
+    "training_duration": 288.0291180610657,
+    "final_performance": {
+      "avg_reward_last_100": 0.801280000000014,
+      "avg_completion_rate_last_100": 0.6613,
+      "best_reward": 2.5040000000000115,
+      "best_completion_rate": 0.73
+    },
+    "learning_progress": {
+      "reward_improvement": 5.1324444444444355,
+      "completion_rate_improvement": 0.14500000000000002
+    }
+  },
+  "detailed_metrics": {
+    "rewards": {
+      "mean": 0.6708150573371022,
+      "std": 0.921963041914168,
+      "min": -4.041666666666643,
+      "max": 2.5040000000000115
+    },
+    "completion_rates": {
+      "mean": 0.6556556768283149,
+      "std": 0.03540422555237471,
+      "min": 0.5,
+      "max": 0.73
+    }
+  }
+}
