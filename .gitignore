@@ -60,13 +60,28 @@ venv.bak/
 ehthumbs.db
 Thumbs.db
 
-# Training outputs (keep structure but ignore large files)
-results/*/checkpoints/*.pt
-results/*/checkpoints/*.pth
-results/*/logs/*.log
-results/*/data/*.json
-logs/*.log
-logs/events.out.tfevents.*
+# Training outputs and results (exclude all training data)
+results/
+checkpoints/
+logs/
+*.json
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.pdf
+*.csv
+*.npy
+*.npz
+*.h5
+*.hdf5
+
+# Temporary test files and outputs
+test_plots/
+test_realtime/
+demo_output/
+temp_results/
 
 # Temporary files
 *.tmp
