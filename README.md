@@ -59,8 +59,8 @@ biye_augment/
 
 1. **克隆仓库**
 ```bash
-git clone https://github.com/your-username/biye_augment.git
-cd biye_augment
+git clone https://github.com/3145647405/biye_2.git
+cd biye_2
 ```
 
 2. **创建conda环境**
@@ -242,8 +242,8 @@ python test_visualization.py
 
 ## 📞 联系方式
 
-- 项目链接: [https://github.com/your-username/biye_augment](https://github.com/your-username/biye_augment)
-- 问题反馈: [Issues](https://github.com/your-username/biye_augment/issues)
+- 项目链接: [https://github.com/3145647405/biye_2](https://github.com/3145647405/biye_2)
+- 问题反馈: [Issues](https://github.com/3145647405/biye_2/issues)
 
 ## 🙏 致谢
 
